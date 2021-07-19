@@ -46,6 +46,8 @@ struct parameter {
 	int intrachr_num;
 	int intrachr_min;
 	int intrachr_max;
+
+    int addtional_svs;
 };
 
 struct position {

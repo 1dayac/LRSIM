@@ -108,6 +108,8 @@ parameter parse_param(std::string filename) {
     tmp.intrachr_max = parse_value(buffer, buffer_size);
     myfile.getline(buffer, buffer_size);
     tmp.intrachr_num = parse_value(buffer, buffer_size);
+    myfile.getline(buffer, buffer_size);
+    tmp.addtional_svs = parse_value(buffer, buffer_size);
     //std::cout<<"NUM: "<<tmp.intrachr_num<<std::endl;
   }
   myfile.close();
@@ -256,6 +258,25 @@ bool is_overlapping(position curr, std::vector<struct_var> svs) {
   }
   return false;
 }
+
+
+position choose_pos_add(std::map<std::string, std::string> genome, int min, int max, struct_var& main_sv, std::vector<struct_var>& svs) {
+    position pos;
+    pos.chr = main_sv.chr;
+    int min_pos = max(main_sv.pos.start - 80000, 0);
+    int max_pos = min(genome[pos.chr].size(), main_sv.pos.end + 80000);
+    int num = 0;
+    while (is_overlapping(pos, svs) && num < 100) {
+        pos.start = min_pos + (rand() % (max_pos - min_pos));
+        pos.end = pos.start + min + (rand() % (max - min));
+        num++;
+    }
+    if (num == 100) {
+        pos.chr = "None";
+    }
+    return pos;
+}
+
 position choose_pos(std::map<std::string, std::string> genome, int min, int max, std::vector<struct_var>& svs) {
   position pos = get_pos(genome, min, max);
   int num = 0;
@@ -400,6 +421,24 @@ std::vector<struct_var> generate_mutations_ref(std::string parameter_file, std::
     mut.pos = choose_pos(genome, par.indel_min, par.indel_max, svs);
     mut.target = mut.pos;
     svs.push_back(mut);
+    for (int j = 0; j < par.addtional_svs; ++j) {
+        struct_var mut2;
+        int r = rand() % 3;
+        if (r == 0) {
+            mut2.type = 1; //insertion
+        }
+        if (r == 1) {
+            mut2.type = 4; //deletion
+        }
+        if (r == 2) {
+            mut2.type = 2; //inversion
+        }
+
+        mut2.pos = choose_pos_add(genome, 100, 1000, mut,  svs);
+        if (mut2.pos.chr != "None") {
+            svs.push_back(mut2);
+        }
+    }
   }
   //inv
   for (int i = 0; i < par.inv_num; i++) {
@@ -861,6 +900,9 @@ void generate_parameter_file(std::string parameter_file) {
   fprintf(file2, "%s", "INTRA_TRANS_minimum_length: 600\n");
   fprintf(file2, "%s", "INTRA_TRANS_maximum_length: 800\n");
   fprintf(file2, "%s", "INTRA_TRANS_number: 2\n");
+
+  fprintf(file2, "%s", "ADDITIONAL_SVS_number: 2\n");
+
   fclose(file2);
 }
 
