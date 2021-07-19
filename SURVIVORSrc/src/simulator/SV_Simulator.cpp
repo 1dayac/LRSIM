@@ -406,7 +406,9 @@ std::vector<struct_var> generate_mutations(std::string parameter_file, std::map<
 }
 
 std::vector<struct_var> generate_mutations_ref(std::string parameter_file, std::map<std::string, std::string> genome) {
+  std::cout << "Generate mutations ref" << std::endl;
   parameter par = parse_param(parameter_file);
+  std::cout << par.addtional_svs << " small svs for main sv" << std::endl;
   std::vector<struct_var> svs;
   //duplications
   struct_var mut;
@@ -437,6 +439,7 @@ std::vector<struct_var> generate_mutations_ref(std::string parameter_file, std::
         mut2.pos = choose_pos_add(genome, 100, 1000, mut,  svs);
         if (mut2.pos.chr != "None") {
             svs.push_back(mut2);
+            std::cout << "Additional SV" << std::endl;
         }
     }
   }
