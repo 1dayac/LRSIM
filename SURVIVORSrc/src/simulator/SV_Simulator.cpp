@@ -262,13 +262,13 @@ bool is_overlapping(position curr, std::vector<struct_var> svs) {
 
 position choose_pos_add(std::map<std::string, std::string> genome, int min, int max, struct_var& main_sv, std::vector<struct_var>& svs) {
     position pos;
-    pos.chr = main_sv.chr;
-    int min_pos = max(main_sv.pos.start - 80000, 0);
-    int max_pos = min(genome[pos.chr].size(), main_sv.pos.end + 80000);
+    pos.chr = main_sv.pos.chr;
+    int min_pos = std::max(main_sv.pos.start - 80000, 0);
+    int max_pos = std::min(genome[pos.chr].size(), main_sv.pos.stop + 80000);
     int num = 0;
     while (is_overlapping(pos, svs) && num < 100) {
         pos.start = min_pos + (rand() % (max_pos - min_pos));
-        pos.end = pos.start + min + (rand() % (max - min));
+        pos.stop = pos.start + min + (rand() % (max - min));
         num++;
     }
     if (num == 100) {
