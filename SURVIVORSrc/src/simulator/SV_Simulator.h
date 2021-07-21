@@ -17,6 +17,7 @@
 #include <vector>
 #include <algorithm>
 #include <sstream>
+#include <string>
 
 struct parameter {
 	int dup_min;
@@ -54,6 +55,10 @@ struct position {
 	std::string chr;
 	int start;
 	int stop;
+
+	std::string to_string() const {
+	    return chr + " " + std::to_string(start) + " " + std::to_string(stop);
+	}
 };
 
 struct struct_var {

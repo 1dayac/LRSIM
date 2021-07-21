@@ -423,6 +423,7 @@ std::vector<struct_var> generate_mutations_ref(std::string parameter_file, std::
     mut.pos = choose_pos(genome, par.indel_min, par.indel_max, svs);
     mut.target = mut.pos;
     svs.push_back(mut);
+    std::cout << "Main SV: " << mut.type << " Pos:" << mut.pos.to_string() + " Target:" + mut.target.to_string();
     for (int j = 0; j < par.addtional_svs; ++j) {
         struct_var mut2;
         int r = rand() % 3;
@@ -439,7 +440,7 @@ std::vector<struct_var> generate_mutations_ref(std::string parameter_file, std::
         mut2.pos = choose_pos_add(genome, 100, 1000, mut,  svs);
         if (mut2.pos.chr != "None") {
             svs.push_back(mut2);
-            std::cout << "Additional SV" << std::endl;
+            std::cout << "Additional SV: " << mut2.type << " Pos:" << mut2.pos.to_string() + " Target:" + mut2.target.to_string();
         }
     }
   }
