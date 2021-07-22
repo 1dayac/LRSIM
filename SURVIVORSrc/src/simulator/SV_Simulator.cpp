@@ -265,6 +265,8 @@ position choose_pos_add(std::map<std::string, std::string> genome, int min, int 
     pos.chr = main_sv.pos.chr;
     int min_pos = std::max(main_sv.pos.start - 80000, 0);
     int max_pos = std::min(int(genome[pos.chr].size()), main_sv.pos.stop + 80000);
+    pos.start = min_pos + (rand() % (max_pos - min_pos));
+    pos.stop = pos.start + min + (rand() % (max - min));
     int num = 0;
     while (is_overlapping(pos, svs) && num < 100) {
         pos.start = min_pos + (rand() % (max_pos - min_pos));
