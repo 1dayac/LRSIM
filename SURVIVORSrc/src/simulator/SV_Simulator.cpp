@@ -440,6 +440,7 @@ std::vector<struct_var> generate_mutations_ref(std::string parameter_file, std::
         }
 
         mut2.pos = choose_pos_add(genome, 100, 1000, mut,  svs);
+        mut2.target = mut2.pos;
         if (mut2.pos.chr != "None") {
             svs.push_back(mut2);
             std::cout << "Additional SV: " << mut2.type << " Pos:" << mut2.pos.to_string() + " Target:" + mut2.target.to_string()  << std::endl;
