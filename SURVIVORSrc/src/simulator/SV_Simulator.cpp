@@ -1095,7 +1095,7 @@ std::vector<struct_var_diploid> generate_mutations_diploid(std::string parameter
               mut2.type = 2; //inversion
           }
 
-          mut2.pos = choose_pos_add(genome, 100, 1000, mut,  svs);
+          mut2.pos = choose_pos_add_diploid(genome, 100, 1000, mut,  svs);
           mut2.target = mut2.pos;
           if (mut2.type == 2) {
               mut2.target.start = mut2.pos.stop;
