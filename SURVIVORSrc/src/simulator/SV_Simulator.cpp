@@ -441,6 +441,10 @@ std::vector<struct_var> generate_mutations_ref(std::string parameter_file, std::
 
         mut2.pos = choose_pos_add(genome, 100, 1000, mut,  svs);
         mut2.target = mut2.pos;
+        if (mut2.type == 2) {
+            mut2.target.start = mut2.pos.stop;
+            mut2.target.stop = mut2.pos.start;
+        }
         if (mut2.pos.chr != "None") {
             svs.push_back(mut2);
             std::cout << "Additional SV: " << mut2.type << " Pos:" << mut2.pos.to_string() + " Target:" + mut2.target.to_string()  << std::endl;
@@ -949,6 +953,26 @@ position choose_pos_diploid(std::map<std::string, std::string> genome, int min, 
   return pos;
 }
 
+position choose_pos_add_diploid(std::map<std::string, std::string> genome, int min, int max, struct_var_diploid& main_sv, std::vector<struct_var_diploid>& svs) {
+    position pos;
+    pos.chr = main_sv.pos.chr;
+    int min_pos = std::max(main_sv.pos.start - 80000, 0);
+    int max_pos = std::min(int(genome[pos.chr].size()), main_sv.pos.stop + 80000);
+    pos.start = min_pos + (rand() % (max_pos - min_pos));
+    pos.stop = pos.start + min + (rand() % (max - min));
+    int num = 0;
+    while (is_overlapping_diploid(pos, svs) && num < 100) {
+        pos.start = min_pos + (rand() % (max_pos - min_pos));
+        pos.stop = pos.start + min + (rand() % (max - min));
+        num++;
+    }
+    if (num == 100) {
+        pos.chr = "None";
+    }
+    return pos;
+}
+
+
 void apply_SNP(std::map<std::string, std::string>& genomeA,std::map<std::string, std::string> &genomeB, int bases_per_snp, FILE *file2A, FILE *file2B, FILE *file2AB) { //NEW
 
   //iterate thru chromosomes and apply SNPs
@@ -1056,6 +1080,33 @@ std::vector<struct_var_diploid> generate_mutations_diploid(std::string parameter
     mut.target = mut.pos;
     mut.haplotype=determine_haplotype(&num_a,&num_b,par.indel_num);
     svs.push_back(mut);
+    for (int j = 0; j < par.addtional_svs; ++j) {
+          struct_var_diploid mut2;
+          mut2.haplotype= rand() % 3;
+
+        int r = rand() % 3;
+          if (r == 0) {
+              mut2.type = 1; //insertion
+          }
+          if (r == 1) {
+              mut2.type = 4; //deletion
+          }
+          if (r == 2) {
+              mut2.type = 2; //inversion
+          }
+
+          mut2.pos = choose_pos_add(genome, 100, 1000, mut,  svs);
+          mut2.target = mut2.pos;
+          if (mut2.type == 2) {
+              mut2.target.start = mut2.pos.stop;
+              mut2.target.stop = mut2.pos.start;
+          }
+          if (mut2.pos.chr != "None") {
+              svs.push_back(mut2);
+              std::cout << "Additional SV: " << mut2.type << " Pos:" << mut2.pos.to_string() + " Target:" + mut2.target.to_string()  << std::endl;
+          }
+    }
+
   }
 
   num_a = 0;
