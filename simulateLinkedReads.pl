@@ -247,6 +247,7 @@ INV_dup_number: 0
 INTRA_TRANS_minimum_length: 1000
 INTRA_TRANS_maximum_length: 10000
 INTRA_TRANS_number: 0
+ADDITIONAL_SVS_number: 2
 PARAMETER
       close $parameterFH;
 
