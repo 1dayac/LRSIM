@@ -1056,6 +1056,7 @@ std::vector<struct_var_diploid> generate_mutations_diploid(std::string parameter
   while (num_a < par.dup_num or num_b < par.dup_num) {
     mut.type = 0;
     //get_start location;
+    std::cout << "min - " << par.dup_min << " max - " << par.dup_max << std::endl;
     mut.pos = choose_pos_diploid(genome, par.dup_min, par.dup_max, svs);
     //std::cout << "chose position duplication" << std::endl;
     //get_opposit location
