@@ -197,7 +197,7 @@ float percent_N(std::string seq) {
   return n / size;
 }
 position get_pos(std::map<std::string, std::string> genome, int min_pos, int max_pos) {
-  //std::cout<<max_pos<<std::endl;
+  std::cout<<max_pos<<std::endl;
   position tmp;
   std::string seq = "N";
   //std::cout<<percent_N(seq)<<std::endl;
@@ -241,7 +241,7 @@ position get_pos(std::map<std::string, std::string> genome, int min_pos, int max
     if (max_pos != -1) {
       seq = (*chr).second.substr(tmp.start, tmp.stop - tmp.start);
     }
-    //std::cout<<(*chr).first<<" "<<tmp.start<<" "<<tmp.stop<<std::endl;
+    std::cout<<(*chr).first<<" "<<tmp.start<<" "<<tmp.stop<<std::endl;
   }
   //std::cout<<"end:"<<std::endl;
   return tmp;
@@ -1063,7 +1063,33 @@ std::vector<struct_var_diploid> generate_mutations_diploid(std::string parameter
     mut.haplotype=determine_haplotype(&num_a,&num_b,par.dup_num);
     //std::cout << "got haplotype duplication" << std::endl;
     svs.push_back(mut);
-    //std::cout << num_a << num_b << std::endl; 
+    //std::cout << num_a << num_b << std::endl;
+      for (int j = 0; j < par.addtional_svs; ++j) {
+          struct_var_diploid mut2;
+          mut2.haplotype= rand() % 5;
+
+          int r = rand() % 3;
+          if (r == 0) {
+              mut2.type = 1; //insertion
+          }
+          if (r == 1) {
+              mut2.type = 4; //deletion
+          }
+          if (r == 2) {
+              mut2.type = 2; //inversion
+          }
+
+          mut2.pos = choose_pos_add_diploid(genome, 100, 1000, mut,  svs);
+          mut2.target = mut2.pos;
+          if (mut2.type == 2) {
+              mut2.target.start = mut2.pos.stop;
+              mut2.target.stop = mut2.pos.start;
+          }
+          if (mut2.pos.chr != "None") {
+              svs.push_back(mut2);
+              std::cout << "Additional SV: " << mut2.type << " Pos:" << mut2.pos.to_string() + " Target:" + mut2.target.to_string()  << std::endl;
+          }
+      }
   }
 
   num_a = 0;
@@ -1082,9 +1108,9 @@ std::vector<struct_var_diploid> generate_mutations_diploid(std::string parameter
     svs.push_back(mut);
     for (int j = 0; j < par.addtional_svs; ++j) {
           struct_var_diploid mut2;
-          mut2.haplotype= rand() % 3;
+          mut2.haplotype= rand() % 5;
 
-        int r = rand() % 3;
+          int r = rand() % 3;
           if (r == 0) {
               mut2.type = 1; //insertion
           }
