@@ -55,9 +55,9 @@ parameter parse_param(std::string filename) {
 
   myfile.getline(buffer, buffer_size);
   myfile.getline(buffer, buffer_size);
-  tmp.dup_max = parse_value(buffer, buffer_size);
-  myfile.getline(buffer, buffer_size);
   tmp.dup_min = parse_value(buffer, buffer_size);
+  myfile.getline(buffer, buffer_size);
+  tmp.dup_max = parse_value(buffer, buffer_size);
   myfile.getline(buffer, buffer_size);
   tmp.dup_num = parse_value(buffer, buffer_size);
   myfile.getline(buffer, buffer_size);
